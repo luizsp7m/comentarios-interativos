@@ -18,7 +18,7 @@ const dados = {
 };
 
 type ComentarioProps = {
-  image: string;
+  image?: string;
 };
 
 const Comentario = ({ image }: ComentarioProps) => {
@@ -45,7 +45,7 @@ const Comentario = ({ image }: ComentarioProps) => {
               }}
             >
               <WrapperImagem>
-                <Imagem src={image} alt="texto" />
+                <Imagem src={"https://i.pinimg.com/736x/6f/1e/fb/6f1efb3e2f7ddb6f6b9a3dbefabe0c67.jpg"} alt="texto" />
               </WrapperImagem>
               <p>
                 <strong>amyrobson</strong>
