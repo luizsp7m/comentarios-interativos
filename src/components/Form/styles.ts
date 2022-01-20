@@ -10,13 +10,13 @@ export const Container = styled.form`
   gap: 2rem;
   align-items: flex-start;
 
-  img {
+  > img {
     width: 5rem;
     height: 5rem;
     object-fit: cover;
   }
 
-  textarea {
+  > textarea {
     resize: none;
     outline: 0;
     flex: 1;
@@ -38,7 +38,7 @@ export const Container = styled.form`
     }
   }
 
-  button {
+  > button {
     background: var(--moderate-blue);
     color: var(--white);
     text-transform: uppercase;

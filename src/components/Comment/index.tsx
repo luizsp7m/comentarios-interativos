@@ -4,8 +4,8 @@ import { Container, CommentWrapper, CommentHeader, CommentBody } from "./styles"
 import { useComment, User } from "../../contexts/CommentContext";
 import { formatDistanceToNowStrict } from "date-fns";
 import { Options } from "../Options";
-import { InputComment } from "../InputComment";
-import { useState } from "react";
+import { InputReply } from "../Form";
+import { FormEvent, useState } from "react";
 
 interface CommentProps {
   id: string;
@@ -14,21 +14,43 @@ interface CommentProps {
   score: number;
   user: User;
   replyingTo?: {
-    username?: string;
+    username: string;
     commentId: string;
   }
 }
 
 export function Comment({ id, content, createdAt, score, user, replyingTo }: CommentProps) {
-  const { currentUser } = useComment();
+  const { currentUser, updateComment } = useComment();
 
   const [showInputComment, setShowInputComment] = useState(false);
+  const [showInputUpdate, setShowInputUpdate] = useState(false);
+  const [contentInput, setContentInput] = useState(content);
 
-  function replyButtonOnClick() { // Abrir ou fechar o Input comment
+  function toggleShowInputComment() { // Abrir ou fechar o Input comment
     setShowInputComment(!showInputComment);
   }
 
-  const dateFormatted = formatDistanceToNowStrict(new Date(`${createdAt}`), {});
+  function toggleInputUpdate() {
+    setShowInputUpdate(!showInputUpdate);
+  }
+
+  function closeInputUpdate() {
+    setShowInputUpdate(!showInputUpdate);
+  }
+
+  function closeInputReply() { // Fechar input comment depois que enviar uma resposta
+    setShowInputComment(false);
+  }
+
+  function onUpdateComment(event: FormEvent) {
+    event.preventDefault();
+
+    updateComment({
+      content: contentInput, commentId: id, replyingTo, closeInputUpdate
+    });
+  }
+
+  const dateFormatted = formatDistanceToNowStrict(new Date(`${createdAt}`), {}); // Formatação de quanto tempo atrás
 
   return (
     <>
@@ -44,11 +66,30 @@ export function Comment({ id, content, createdAt, score, user, replyingTo }: Com
               <time>{dateFormatted} ago</time>
             </div>
 
-            {user.username === currentUser.username ? <Options /> : <ReplyButton replyButtonOnClick={replyButtonOnClick} />}
+            {user.username === currentUser.username ?
+              <Options
+                toggleInputUpdate={toggleInputUpdate}
+                commentId={id}
+                replyingTo={replyingTo}
+              />
+              : <ReplyButton
+                toggleShowInputComment={toggleShowInputComment}
+              />}
           </CommentHeader>
 
           <CommentBody>
-            {replyingTo && <b>@{replyingTo.username}</b>} {content}
+            {showInputUpdate ? <form onSubmit={onUpdateComment}>
+              <textarea
+                placeholder="Add a comment..."
+                rows={3}
+                value={`${contentInput}`}
+                onChange={({ target }) => setContentInput(target.value)}
+                required={true}
+              />
+              <button type="submit">Update</button>
+            </form> : <p>
+              {replyingTo && <b>@{replyingTo.username}</b>} {content}
+            </p>}
           </CommentBody>
         </CommentWrapper>
       </Container>
@@ -57,12 +98,13 @@ export function Comment({ id, content, createdAt, score, user, replyingTo }: Com
       { /* respondendo e o ID do comentário para saber onde inserir a resposta */}
       { /* Caso seja uma resposta para uma resposta, devemos passar o nome e o ID do comentário pai */}
 
-      {showInputComment && <InputComment
-        context="Reply"
+      {showInputComment && <InputReply
         replyingTo={{
           username: user.username,
-          commentId: replyingTo ? replyingTo.commentId : id, // Se tem replyingTo é uma resposta, se não tem, é um comentário
+          commentId: replyingTo ? replyingTo.commentId : id, // Se tem replyingTo então é uma resposta, se não tem, é um comentário
         }}
+
+        closeInputReply={closeInputReply}
       />}
     </>
   );

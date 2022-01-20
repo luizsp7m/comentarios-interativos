@@ -5,7 +5,7 @@ export const Container = styled.div`
   flex-direction: column;
   align-items: center;
 
-  button, h5 {
+  > button, h5 {
     width: 4rem;
     height: 4rem;
     border: 0;
@@ -22,7 +22,7 @@ export const Container = styled.div`
     cursor: pointer;
   }
 
-  h5 {
+  > h5 {
     cursor: default;
   }
 `;

@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { Comment } from "./components/Comment";
-import { InputComment } from "./components/InputComment";
+import { InputComment } from "./components/Form";
 import { useComment } from "./contexts/CommentContext";
 
 export default function App() {

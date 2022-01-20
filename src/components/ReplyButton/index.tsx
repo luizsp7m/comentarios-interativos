@@ -2,12 +2,12 @@ import { FaReply } from "react-icons/fa";
 import { Container } from "./styles";
 
 interface ReplyButtonProps {
-  replyButtonOnClick: () => void;
+  toggleShowInputComment: () => void;
 }
 
-export const ReplyButton = ({ replyButtonOnClick }: ReplyButtonProps) => {
+export const ReplyButton = ({ toggleShowInputComment }: ReplyButtonProps) => {
   return (
-    <Container onClick={replyButtonOnClick}>
+    <Container onClick={toggleShowInputComment}>
       <FaReply /> {" Reply "}
     </Container>
   );

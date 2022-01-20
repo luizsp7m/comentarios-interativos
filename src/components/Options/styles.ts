@@ -4,7 +4,7 @@ export const Container = styled.div`
   display: flex;
   align-items: center;
   
-  div {
+  > div {
     display: flex;
     align-items: center;
     font-weight: 400;
@@ -15,17 +15,21 @@ export const Container = styled.div`
       opacity: 0.75;
     }
 
-    img {
+    > img {
       width: 1.6rem;
       height: 1.6rem;
       border-radius: 0;
     }
 
-    span.delete {
+    > span {
+      font-size: 1.6rem;
+    }
+
+    > span.delete {
       color: var(--soft-red);
     }
 
-    span.edit {
+    > span.edit {
       color: var(--moderate-blue);
     } 
   }
