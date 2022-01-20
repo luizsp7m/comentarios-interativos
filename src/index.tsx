@@ -1,11 +1,15 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
 import App from './App';
+import { CommentProvider } from './contexts/CommentContext';
+import { GlobalStyle } from './styles/global';
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    <CommentProvider>
+      <App />
+      <GlobalStyle />
+    </CommentProvider>
   </React.StrictMode>,
-  document.getElementById('root')
+  document.getElementById("root")
 );

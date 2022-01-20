@@ -1,34 +1,85 @@
-import React, { useEffect, useState } from "react";
-import Comentario from "./components/Comentarios";
-import Api from "./api";
+import styled from "styled-components";
+import { Comment } from "./components/Comment";
+import { InputComment } from "./components/InputComment";
+import { useComment } from "./contexts/CommentContext";
 
-type Imagens = {
-  png: string;
-  webp: string;
-};
-type UsuarioAtual = {
-  image: Imagens;
-  userName: string;
-};
-
-const App = () => {
-  const [usuarioAtual, setUsuarioAtual] = useState<UsuarioAtual[]>([]);
-
-  useEffect(() => {
-    Api.get("/currentUser").then((res) => {
-      setUsuarioAtual(res.data);
-    });
-  }, []);
-
-  console.log(usuarioAtual);
+export default function App() {
+  const { comments } = useComment();
 
   return (
-    <>
-      {/* {usuarioAtual.map((dadosUsuario, index) => ( */}
-        <Comentario />
-      {/* ))} */}
-    </>
-  );
-};
+    <Container>
+      <Comments>
+        {comments.map(comment => (
+          <div key={comment.id}>
+            <div className="comment">
+              <Comment
+                id={comment.id}
+                content={comment.content}
+                createdAt={comment.createdAt}
+                score={comment.score}
+                user={comment.user}
+              />
+            </div>
 
-export default App;
+            {comment.replies.length > 0 && (
+              <Replies>
+                {comment.replies.map(reply => (
+                  <Comment
+                    key={reply.id}
+                    id={reply.id}
+                    content={reply.content}
+                    createdAt={reply.createdAt}
+                    score={reply.score}
+                    user={reply.user}
+                    replyingTo={{
+                      commentId: comment.id,
+                      username: reply.replyingTo,
+                    }}
+                  />
+                ))}
+              </Replies>
+            )}
+          </div>
+        ))}
+      </Comments>
+
+      <InputComment />
+    </Container>
+  );
+}
+
+const Container = styled.div` // Container de toda a aplicação
+  width: 100%;
+  max-width: 768px;
+  margin: 0 auto;
+  padding: 2rem;
+  min-height: 100vh;
+
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+`
+
+const Comments = styled.div` // Container de todos os comentários
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+
+  > div {
+    > div {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+  }
+`
+
+const Replies = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  padding-left: 4rem;
+  border-left: 1px solid var(--light-gray);
+  margin-left: 4rem;
+  margin-top: 2rem;
+`;
